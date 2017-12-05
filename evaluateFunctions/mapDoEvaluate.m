@@ -56,10 +56,14 @@ if doPrint == true
 end
 figure;
 imagesc(confusion);
+xticklabels(originalCategoryNames);
+yticklabels(originalCategoryNames);
+colorbar
 title('Confustion Matrix post Mapping training');
 file_name = [outputPath '/mapDoEval_conf.jpg'];
 Image = getframe(gcf);
 imwrite(Image.cdata, file_name);
+
 
 end
 

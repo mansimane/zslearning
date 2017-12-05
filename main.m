@@ -62,7 +62,7 @@ save(sprintf('%s/trainParams.mat', outputPath),  'trainParams');
 save(sprintf('%s/thetaSeenSoftmax.mat', outputPath), 'thetaSeen', 'trainParamsSeen');
 
 % % Get train accuracy
-softmaxDoEvaluate( X, Y, label_names, thetaSeen, trainParamsSeen, true );
+softmaxDoEvaluate( X, Y, label_names, thetaSeen, trainParamsSeen, true, zeroCategories, outputPath );
  
 disp('Training unseen softmax features');
 trainParamsUnseen.zeroShotCategories = zeroCategories;

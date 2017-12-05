@@ -1,4 +1,4 @@
-function [ results ] = softmaxDoEvaluate( images, categories, categoryNames, theta, trainParams, doPrint, zeroCategories )
+function [ results ] = softmaxDoEvaluate( images, categories, categoryNames, theta, trainParams, doPrint, zeroCategories,outputPath )
 
 W = stack2param(theta, trainParams.decodeInfo);
 numCategories = length(categoryNames);
@@ -24,6 +24,17 @@ t = truePos ./ sum(confusion, 2);
 results.avgPrecision = mean(t(isfinite(t), :));
 t = truePos' ./ sum(confusion, 1);
 results.avgRecall = mean(t(:, isfinite(t)));
+
+figure,
+imagesc(confusion);
+xticklabels(categoryNames);
+yticklabels(categoryNames);
+colorbar
+title('Confustion Matrix post Mapping training');
+file_name = [outputPath '/softmaxDoEval_conf.jpg'];
+Image = getframe(gcf);
+imwrite(Image.cdata, file_name);
+
 
 if nargin > 6
     numUnseen = sum(arrayfun(@(x) nnz(categories == x), zeroCategories));

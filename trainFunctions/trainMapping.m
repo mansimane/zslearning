@@ -33,9 +33,10 @@ fields = {{'wordDataset',         'acl'};            % type of embedding dataset
           {'autoencMultStart',    0.01};   % starting value for autoenc mult
           {'sparsityParam',       0.035};  % desired average activation of the hidden units.
           {'beta',                5};      % weight of sparsity penalty term
-          {'epochs',              100};      % Number of epochs to train for
-          {'batch_size',          256};    % Batchsize for gradient calcultation
-          {'lr',                  0.001};    % Batchsize for gradient calcultation
+
+          {'epochs',              5};      % Number of epochs to train for
+          {'batch_size',          128};    % Batchsize for gradient calcultation
+          {'lr',                  0.01};    % Batchsize for gradient calcultation
 };
 
 % Load existing model parameters, if they exist

@@ -11,9 +11,9 @@ p2 = plot(thresholds, gSeenAccuracies, 'b-+', 'LineWidth', 2);
 h_title = title('Gaussian model');
 h_xl = xlabel('Fraction of points classified as unseen');
 h_yl = ylabel('Accuracy');
-set(h_title, 'FontSize', 24);
-set(h_xl, 'FontSize', 24);
-set(h_yl, 'FontSize', 24);
+set(h_title, 'FontSize', 12);
+set(h_xl, 'FontSize', 12);
+set(h_yl, 'FontSize', 12);
 legend([p1, p2], 'Unseen Acc', 'Seen Acc');
 
 file_name = [outputPath '/gaussian_model_acc.jpg'];
