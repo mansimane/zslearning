@@ -19,7 +19,7 @@ load('image_data/images/cifar10/meta.mat');
 
 % load word table
 load('word_data/acl/cifar10/wordTable.mat');
-load('image_data/features/cifar10_small/test.mat');
+%load('image_data/features/cifar10_small/test.mat');
 Y = testY+1;
 label_names = [{'Not\_Label'}; label_names];
 numImages = size(mappedTestImages{2}, 2);

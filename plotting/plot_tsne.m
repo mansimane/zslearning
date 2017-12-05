@@ -19,7 +19,7 @@ load('image_data/images/cifar10/meta.mat');
 
 % load word table
 load('word_data/acl/cifar10/wordTable.mat');
-load('image_data/features/cifar10_small/test.mat');
+load('image_data/features/cifar10/test.mat');
 Y = testY+1;
 label_names = [{'Not\_Label'}; label_names];
 numImages = size(mappedTestImages{2}, 2);
@@ -72,30 +72,3 @@ file_name = [outputPath '/SemanticWordSpace_seen.jpg'];
 Image = getframe(gcf);
 imwrite(Image.cdata, file_name);
 
-%% 
-% for i=1:num_seen_cats
-%     disp(i);
-%     t = tsne([mappedTestImages{2} wordTable]');
-%     [C,t,l]= pca([mappedTestImages{2} wordTable]','NumComponents',2);
-% 
-%     mappedX_t = t(1:numImages, :);
-%     mappedWordTable_t = t(numImages+1:end, :);
-% 
-%     do the visualization
-%     visualize(mappedX_t, Y, mappedWordTable_t, label_names);
-%     figure;
-%     Y_bin = (Y==i);
-%     Y_bin = Y_bin* i;
-%     Y_bin = Y_bin + 1;
-%     hold on;
-%     gscatter(mappedX_t(:,1), mappedX_t(:,2), label_names(Y_bin), [], '+o*.xsd^v><', 8);
-%     hold on;
-% end
-% hold on;
-% 
-% scatter(mappedWordTable_t(:,1), mappedWordTable_t(:,2), 200, 'd', 'k', 'filled');
-% for i = 1:length(label_names)-1
-%     text(mappedWordTable_t(i,1),mappedWordTable_t(i,2),label_names{i+1},'BackgroundColor',[.7 .9 .7]);        
-% end
-% axis off;
-% hold off;

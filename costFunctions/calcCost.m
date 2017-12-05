@@ -1,13 +1,19 @@
 function [cost] = calcCost( theta, data, params )
+if params.GPU == true
+    allImgs = gpuArray(data.imgs);
+    cat_id = gpuArray(data.cat_id);
 
+else
+    allImgs = [ data.imgs ];
+    cat_id = data.cat_id;
+
+end    
 [ W, b ] = stack2param(theta, params.decodeInfo);
 
-cat_id = data.cat_id;
 ty = (cat_id == data.categories)';
 lambda_penalty = params.lambda_penalty;
 
 numImages = size(data.imgs, 2);
-allImgs = [ data.imgs ];
 numAllImages = size(allImgs, 2);
 
 a2All = params.f(bsxfun(@plus, W{1} * allImgs, b{1}));
@@ -24,6 +30,7 @@ w_min_h = hAll - w; %w_min_h =DxN, ty = 1xN
 J = sum( ty.*  sum((w_min_h).^2)) - sum(lambda_penalty *((1-ty) .* sum((w_min_h).^2))) ;
 
 cost = 0.5 * (1 / (numImages) * J ) + sparsity + reg;
-
-
+if params.GPU == true
+    cost = gather(cost);
+end  
 end

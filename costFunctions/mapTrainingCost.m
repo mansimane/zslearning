@@ -1,13 +1,20 @@
 function [cost, grad] = mapTrainingCost( theta, data, params )
 
+if params.GPU == true
+    allImgs = gpuArray(data.imgs);
+    cat_id = gpuArray(data.cat_id);
+
+else
+    allImgs = [ data.imgs ];
+    cat_id = data.cat_id;
+
+end
 [ W, b ] = stack2param(theta, params.decodeInfo);
 
-cat_id = data.cat_id;
 ty = (cat_id == data.categories)';
 lambda_penalty = params.lambda_penalty;
 
 numImages = size(data.imgs, 2);
-allImgs = [ data.imgs ];
 numAllImages = size(allImgs, 2);
 
 a2All = params.f(bsxfun(@plus, W{1} * allImgs, b{1}));
@@ -36,7 +43,11 @@ W2grad = del3All * a2All' / numAllImages + lambda * W{2};
 b2grad = sum(del3All, 2) / numAllImages + lambda * b{2};
 W1grad = del2All * allImgs' / numAllImages + lambda * W{1};
 b1grad = sum(del2All, 2) / numAllImages + lambda * b{1};
-
 grad = [ W1grad(:); W2grad(:); b1grad(:); b2grad(:) ];
+if params.GPU == true
+    grad = gather(grad); 
+    cost = gather(cost);
+end   
+    
 
 end

@@ -14,7 +14,7 @@ fields = {{'wordDataset',         'acl'};            % type of embedding dataset
           {'costFunction',        @mapTrainingCostOneLayer}; % training cost function
           {'trainFunction',       @trainLBFGS}; % training function to use
           {'hiddenSize',          200};
-          {'maxIter',             10};    % maximum number of minFunc iterations on a batch
+          {'maxIter',             100};    % maximum number of minFunc iterations on a batch
           {'maxPass',             1};      % maximum number of passes through training data
           {'disableAutoencoder',  true};   % whether to disable autoencoder
           {'maxAutoencIter',      50};     % maximum number of minFunc iterations on a batch
@@ -34,9 +34,10 @@ fields = {{'wordDataset',         'acl'};            % type of embedding dataset
           {'sparsityParam',       0.035};  % desired average activation of the hidden units.
           {'beta',                5};      % weight of sparsity penalty term
 
-          {'epochs',              5};      % Number of epochs to train for
+          {'epochs',              50};      % Number of epochs to train for
           {'batch_size',          128};    % Batchsize for gradient calcultation
-          {'lr',                  0.01};    % Batchsize for gradient calcultation
+          {'lr',                  0.001};    % Batchsize for gradient calcultation
+          {'GPU',                 false};    % Batchsize for gradient calcultation
 };
 
 % Load existing model parameters, if they exist
@@ -82,15 +83,13 @@ data_val.wordTable = wordTable;
 data_val.cat_id = cat_id;
 
 for i = 1: trainParams.epochs
+    epochStart = tic;
+
     indices = randperm(no_of_samples);
     for j = 1:batch_size:no_of_samples-batch_size
          start_idx = j;
          end_idx = j+batch_size;
-%         
-%         if start_idx> end_idx
-%             indices = randperm(no_of_samples);
-%             continue
-%         end
+
         idx = indices(start_idx:end_idx);
         dataToUse.imgs = X(:,idx);
         dataToUse.categories = Y(idx);
@@ -104,6 +103,9 @@ for i = 1: trainParams.epochs
     fprintf('Epoch = %d, train loss = %d,Val loss = %d\n', i, cost, cost_val);
     cost_array(i) = cost;
     cost_val_array(i) = cost_val;
+    time = toc(epochStart);
+    fprintf(' time for epoch: %f s\n', time);
+
 end
 %theta = trainParams.trainFunction(trainParams, dataToUse, theta);
 figure;
