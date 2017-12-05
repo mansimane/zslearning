@@ -7,7 +7,7 @@ numImages = size(images, 2);
 pred = exp(W{1}*images); % k by n matrix with all calcs needed
 pred = bsxfun(@rdivide,pred,sum(pred));
 
-pred_new = zeros(numCategories,numImages);
+pred_new = zeros(numCategories, numImages);
 pred_new(zeroCategories,:) = -inf;
 pred_new(~ismember(1:10,zeroCategories),:) = pred;
 pred = pred_new;
@@ -31,7 +31,7 @@ results.avgPrecision = mean(t(isfinite(t), :));
 t = truePos' ./ sum(confusion, 1);
 results.avgRecall = mean(t(:, isfinite(t)));
 
-figure('units','normalized','outerposition',[0 0 1 1])
+figure('units','normalized','outerposition',[0 0 1 1]);
 imagesc(confusion);
 xticklabels(categoryNames);
 yticklabels(categoryNames);
