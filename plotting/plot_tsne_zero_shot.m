@@ -27,7 +27,7 @@ num_seen_cats = 8;
 
 %% mapping everything in same space
     %t = tsne([mappedTestImages{2} wordTable]');
-figure;
+figure('units','normalized','outerposition',[0 0 1 1]);
 num_seen_cats = 8;
 
 % [C,t,l]= pca([mappedTestImages{1} mappedTestImages{2} mappedTestImages{3} ...
@@ -75,7 +75,7 @@ Image = getframe(gcf);
 imwrite(Image.cdata, file_name);
 
 %% Plot both
-figure;
+figure('units','normalized','outerposition',[0 0 1 1]);
 sym_array = '+o*.xsd^v><';
  idx_z1 = find(Y== zeroCategories(1));
  idx_z2 = find(Y== zeroCategories(2));

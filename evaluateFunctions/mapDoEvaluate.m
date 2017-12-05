@@ -56,8 +56,8 @@ if doPrint == true
 end
 figure('units','normalized','outerposition',[0 0 1 1])
 imagesc(confusion);
-xticklabels(originalCategoryNames);
-yticklabels(originalCategoryNames);
+xticklabels(originalCategoryNames(nonZeroCategories));
+yticklabels(originalCategoryNames(nonZeroCategories));
 colorbar
 title('Confustion Matrix after Map training');
 file_name = [outputPath '/mapDoEval_conf.jpg'];

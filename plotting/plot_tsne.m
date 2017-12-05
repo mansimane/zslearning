@@ -37,6 +37,7 @@ t = tsne([mappedTestImages{1} mappedTestImages{2} mappedTestImages{3} mappedTest
     
 mappedWordTable_t = t(numImages*num_seen_cats+1:end, :);
 sym_array = '+o*.xsd^v><';
+figure('units','normalized','outerposition',[0 0 1 1]);
 scatter(mappedWordTable_t(:,1), mappedWordTable_t(:,2), 200, 'd', 'k', 'filled');
 hold on;
 for i=1:num_seen_cats
