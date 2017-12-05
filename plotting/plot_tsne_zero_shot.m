@@ -62,7 +62,7 @@ end
 axis off;
 hold off;
 
-legend([p3,p4],'Zero Shot category Cat','Zero Shot category Truck', 'Location','northeast');
+legend([p3,p4],'Zero Shot category Cat','Zero Shot category Truck', 'Location','best');
 axis off;
 hold off;
 set(gcf,'paperunits','centimeters')
@@ -104,7 +104,7 @@ for i = 1:length(label_names)-1
 %    text(mappedWordTable_t(i,1),mappedWordTable_t(i,2),['  ' label_names{i+1}]);        
 end
 
-legend([p1,p2,p3,p4],'Non-class Image','Class Image','Zero Shot cat. 1','Zero Shot cat. 2', 'Location','northeast');
+legend([p1,p2,p3,p4],'Non-class Image','Class Image','Zero Shot cat. 1','Zero Shot cat. 2', 'Location','best');
 axis off;
 hold off;
 set(gcf,'paperunits','centimeters')

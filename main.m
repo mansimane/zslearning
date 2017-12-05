@@ -16,7 +16,7 @@ addpath toolbox/pwmetric/;
 % - dataset is the image set we're using (CIFAR-10)
 % - word set is the name of the folder within word_data
 % containing word vectors (see README for details).
-fields = {{'dataset',        'cifar10'};
+fields = {{'dataset',        'cifar10_small'};
           {'wordset',        'acl'};
           {'lambda_penalty',    1E-2};
 };
@@ -43,7 +43,7 @@ trainParams.lambda_penalty = fullParams.lambda_penalty;
      [theta{i}, trainParams ] = trainMapping(X, Y, Xvalidate, Yvalidate, cat_id, trainParams, wordTable, outputPath, i);
  
  end
-load('./gauss_cifar10_acl_cat_truck/theta.mat');
+%load('./gauss_cifar10_acl_cat_truck/theta.mat');
 seen_label_names = label_names(nonZeroCategories);
 mapDoEvaluate(X, Y, nonZeroCategories, label_names, seen_label_names, wordTable, theta, trainParams,outputPath, true);
 save(sprintf('%s/theta.mat', outputPath), 'theta', 'trainParams');

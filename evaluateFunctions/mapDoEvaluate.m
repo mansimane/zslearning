@@ -54,12 +54,12 @@ if doPrint == true
     disp(['Averaged recall: ' num2str(results.avgRecall)]);
     displayConfusionMatrix(confusion, testCategoryNames);
 end
-figure;
+figure('units','normalized','outerposition',[0 0 1 1])
 imagesc(confusion);
 xticklabels(originalCategoryNames);
 yticklabels(originalCategoryNames);
 colorbar
-title('Confustion Matrix post Mapping training');
+title('Confustion Matrix after Map training');
 file_name = [outputPath '/mapDoEval_conf.jpg'];
 Image = getframe(gcf);
 imwrite(Image.cdata, file_name);

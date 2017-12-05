@@ -61,7 +61,7 @@ for i = 1:length(label_names)-1
     text(mappedWordTable_t(i,1),mappedWordTable_t(i,2),['  ' label_names{i+1}],'BackgroundColor',[.7 .9 .7]);        
 end
 
-legend([p1,p2],'Non-class Image','Class Image', 'Location','northeast');
+legend([p1,p2],'Non-class Image','Class Image', 'Location','best');
 
 axis off;
 hold off;

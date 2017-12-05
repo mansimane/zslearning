@@ -6,11 +6,17 @@ numImages = size(images, 2);
 
 pred = exp(W{1}*images); % k by n matrix with all calcs needed
 pred = bsxfun(@rdivide,pred,sum(pred));
-[~, guessedCategories] = max(pred);
 
+pred_new = zeros(numCategories,numImages);
+pred_new(zeroCategories,:) = -inf;
+pred_new(~ismember(1:10,zeroCategories),:) = pred;
+pred = pred_new;
+
+[~, guessedCategories] = max(pred);
 % Calculate scores
 confusion = zeros(numCategories, numCategories);
 for actual = 1:numCategories
+    actual
     guessesForCategory = guessedCategories(categories == actual);
     for guessed = 1:numCategories
         confusion(actual, guessed) = sum(guessesForCategory == guessed);
@@ -25,12 +31,12 @@ results.avgPrecision = mean(t(isfinite(t), :));
 t = truePos' ./ sum(confusion, 1);
 results.avgRecall = mean(t(:, isfinite(t)));
 
-figure,
+figure('units','normalized','outerposition',[0 0 1 1])
 imagesc(confusion);
 xticklabels(categoryNames);
 yticklabels(categoryNames);
 colorbar
-title('Confustion Matrix post Mapping training');
+title('Confustion Matrix after Softmax training');
 file_name = [outputPath '/softmaxDoEval_conf.jpg'];
 Image = getframe(gcf);
 imwrite(Image.cdata, file_name);
