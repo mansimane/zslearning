@@ -34,7 +34,7 @@ fields = {{'wordDataset',         'acl'};            % type of embedding dataset
           {'sparsityParam',       0.035};  % desired average activation of the hidden units.
           {'beta',                5};      % weight of sparsity penalty term
 
-          {'epochs',              50};      % Number of epochs to train for
+          {'epochs',              10};      % Number of epochs to train for
           {'batch_size',          128};    % Batchsize for gradient calcultation
           {'lr',                  0.001};    % Batchsize for gradient calcultation
           {'GPU',                 false};    % Batchsize for gradient calcultation

@@ -1,6 +1,6 @@
 function [ guessedCategories, results ] = evaluateGaussianBayesian(thetaSeenSoftmax, thetaUnseenSoftmax, ...
     thetaMapping, seenSmTrainParams, unseenSmTrainParams, mapTrainParams, images, ...
-    categories, cutoffs, zeroCategoryTypes, nonZeroCategoryTypes, categoryNames, wordVectors, doPrint)
+    categories, cutoffs, zeroCategoryTypes, nonZeroCategoryTypes, categoryNames, wordVectors,mappedTestImages, doPrint)
 
 addpath toolbox;
 
@@ -9,8 +9,8 @@ numCategories = length(zeroCategoryTypes) + length(nonZeroCategoryTypes);
 Ws = stack2param(thetaSeenSoftmax, seenSmTrainParams.decodeInfo);
 Wu = stack2param(thetaUnseenSoftmax, unseenSmTrainParams.decodeInfo);
 
-mappedImages = mapDoMap(images, thetaMapping, mapTrainParams);
-
+%mappedImages = mapDoMap(images, thetaMapping{1}, mapTrainParams);
+%mappedImages = mappedTestImages;
 % This is the seen label classifier
 probSeen = exp(Ws{1}*images); % k by n matrix with all calcs needed
 probSeen = bsxfun(@rdivide,probSeen,sum(probSeen));
@@ -18,21 +18,35 @@ probSeenFull = zeros(numCategories, numImages);
 probSeenFull(nonZeroCategoryTypes, :) = probSeen;
 
 % This is the unseen label classifier
-probUnseen = exp(Wu{1}*mappedImages); % k by n matrix with all calcs needed
-probUnseen = bsxfun(@rdivide,probUnseen,sum(probUnseen));
+%probUnseenFull is 10
+pz1 = zeros(length(nonZeroCategoryTypes),numImages);
+pz2 = zeros(length(nonZeroCategoryTypes),numImages);
 probUnseenFull = zeros(numCategories, numImages);
-probUnseenFull(zeroCategoryTypes, :) = probUnseen;
 
-% Treat everything as seen first, then filter out cases
+for i=1:length(nonZeroCategoryTypes)
+    probUnseen = exp(Wu{1}*mappedTestImages{i}); % 2 by n matrix with all calcs needed
+    pz1(i,:) = probUnseen(1,:);
+    pz2(i,:) = probUnseen(2,:);
+end
+pz1 = bsxfun(@rdivide,pz1,sum(pz1));
+pz2 = bsxfun(@rdivide,pz2,sum(pz2));
+
+pz1_max = max(pz1);%max across rows
+pz2_max = max(pz2);
+probUnseen_max = [max(pz1);max(pz2)];
+probUnseenFull(zeroCategoryTypes, :) = probUnseen_max;
+
+% Treat everything as unseen first, then filter out cases
 % where things fall outside cutoff circles
 probs = ones(size(categories));
 for c_i = 1:length(nonZeroCategoryTypes)
     currentCategory = nonZeroCategoryTypes(c_i);
     centerVector = wordVectors(:, currentCategory);
-    dists = slmetric_pw(centerVector, mappedImages, 'eucdist');
+    dists = slmetric_pw(centerVector, mappedTestImages{c_i}, 'eucdist');
     probs(dists < cutoffs(currentCategory)) = 0; % falls in circle; is not unseen    
 end
 
+%probs = 0, Seen. probs =1 unseen
 finalProbs = bsxfun(@times, probSeenFull, 1 - probs') + bsxfun(@times, probUnseenFull, probs');
 [~, guessedCategories ] = max(finalProbs);
 

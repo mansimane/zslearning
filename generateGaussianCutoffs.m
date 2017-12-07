@@ -1,27 +1,29 @@
 function [ cutoffs ] = generateGaussianCutoffs(thetaSeenSoftmax, thetaUnseenSoftmax, ...
     thetaMapping, seenSmTrainParams, unseenSmTrainParams, mapTrainParams, images, ...
-    categories, wordVectors, cutoffStep, centerType, zeroCategoryTypes, nonZeroCategoryTypes)
+    categories, wordVectors, cutoffStep, centerType, zeroCategoryTypes, nonZeroCategoryTypes, mappedtrainImages)
 
 addpath toolbox;
 addpath toolbox/pwmetric;
 
 numImages = size(images, 2);
 numCategories = length(zeroCategoryTypes) + length(nonZeroCategoryTypes);
-Ws = stack2param(thetaSeenSoftmax, seenSmTrainParams.decodeInfo);
-Wu = stack2param(thetaUnseenSoftmax, unseenSmTrainParams.decodeInfo);
-mappedImages = mapDoMap(images, thetaMapping, mapTrainParams);
+% Ws = stack2param(thetaSeenSoftmax, seenSmTrainParams.decodeInfo);
+% 
+% %% 
+% Wu = stack2param(thetaUnseenSoftmax, unseenSmTrainParams.decodeInfo);
+%mappedImages = mapDoMap(images, thetaMapping, mapTrainParams); 50x760
 
-% This is the seen label classifier
-probSeen = exp(Ws{1}*images); % k by n matrix with all calcs needed
-probSeen = bsxfun(@rdivide,probSeen,sum(probSeen));
-probSeenFull = zeros(numCategories, numImages);
-probSeenFull(nonZeroCategoryTypes, :) = probSeen;
-
-% This is the unseen label classifier
-probUnseen = exp(Wu{1}*mappedImages); % k by n matrix with all calcs needed
-probUnseen = bsxfun(@rdivide,probUnseen,sum(probUnseen));
-probUnseenFull = zeros(numCategories, numImages);
-probUnseenFull(zeroCategoryTypes, :) = probUnseen;
+% % This is the seen label classifier
+% probSeen = exp(Ws{1}*images); % k by n matrix with all calcs needed
+% probSeen = bsxfun(@rdivide,probSeen,sum(probSeen));
+% probSeenFull = zeros(numCategories, numImages);
+% probSeenFull(nonZeroCategoryTypes, :) = probSeen;
+% 
+% % This is the unseen label classifier
+% probUnseen = exp(Wu{1}*mappedImages); % 2 by n matrix with all calcs needed
+% probUnseen = bsxfun(@rdivide,probUnseen,sum(probUnseen));
+% probUnseenFull = zeros(numCategories, numImages);
+% probUnseenFull(zeroCategoryTypes, :) = probUnseen;
 
 cutoffs = zeros(length(nonZeroCategoryTypes) + length(zeroCategoryTypes));
 for c_i = 1:length(nonZeroCategoryTypes)
@@ -33,7 +35,7 @@ for c_i = 1:length(nonZeroCategoryTypes)
     elseif (centerType == 1) % Word vector
         centerVector = wordVectors(:, currentCategory);
     end
-    dists = slmetric_pw(centerVector, mappedImages, 'eucdist');
+    dists = slmetric_pw(centerVector, mappedtrainImages{c_i}, 'eucdist');
     currentCutoff = 0;
     bestAccuracy = 0;
     while true
@@ -41,7 +43,7 @@ for c_i = 1:length(nonZeroCategoryTypes)
         guessedSeen = zeros(size(categories));
         guessedSeen(dists < currentCutoff) = 1;
         actualSeen = categories == currentCategory;
-
+        %cat_idx = find(actualSeen==1);
         truePos = actualSeen == guessedSeen ;
         results.accuracy = sum(truePos) / numImages;
         disp(results.accuracy);

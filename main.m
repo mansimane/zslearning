@@ -16,9 +16,9 @@ addpath toolbox/pwmetric/;
 % - dataset is the image set we're using (CIFAR-10)
 % - word set is the name of the folder within word_data
 % containing word vectors (see README for details).
-fields = {{'dataset',        'cifar10'};
+fields = {{'dataset',        'cifar10_small'};
           {'wordset',        'acl'};
-          {'lambda_penalty',    1E-2};
+          {'lambda_penalty',    1E-5};
 };
 % END primary configurable parameters.
 
@@ -145,7 +145,38 @@ save(sprintf('%s/gSeenAccuracies.mat', outputPath), 'gSeenAccuracies');
 save(sprintf('%s/gUnseenAccuracies.mat', outputPath), 'gUnseenAccuracies');
 save(sprintf('%s/gAccuracies.mat', outputPath), 'gAccuracies');
 
+disp('Run Bayesian pipeline for Gaussian model');
+cutoffs = generateGaussianCutoffs(thetaSeen, thetaUnseen, theta, trainParamsSeen, ...
+   trainParamsUnseen, trainParams, X, Y, wordTable, 0.05, 1, zeroCategories, nonZeroCategories, mapped);
+
+thetaSeenSoftmax = thetaSeen;
+thetaUnseenSoftmax =  thetaUnseen;
+seenSmTrainParams = trainParamsSeen;
+unseenSmTrainParams = trainParamsUnseen;
+mapTrainParams = trainParams;
+thetaMapping = theta;
+
+validX = Xvalidate;
+validY =Yvalidate;
+[ guessedCategories, results ] = evaluateGaussianBayesian(thetaSeenSoftmax, thetaUnseenSoftmax, ...
+    thetaMapping, seenSmTrainParams, unseenSmTrainParams, mapTrainParams, testX, ...
+    testY, cutoffs, zeroCategories, nonZeroCategories, label_names, wordTable, mappedTestImages, true);
+
+% [ guessedCategories, results ] = evaluateGaussianBayesian(thetaSeenSoftmax, thetaUnseenSoftmax, ...
+%     thetaMapping, seenSmTrainParams, unseenSmTrainParams, mapTrainParams, trainX, ...
+%     trainY, cutoffs, zeroCategories, nonZeroCategories, label_names, wordTable, true);
+
+pdfSeenAccuracies = results.seenAccuracy;
+pdfUnseenAccuracies = results.unseenAccuracy;
+pdfAccuracies = results.accuracy;
+disp(results);
+save(sprintf('%s/pdfresults.mat', outputPath),  'results');
+
+%%plots
 plot_Gaussian_model
 % plot_randomConfusionWords_6
 plot_tsne
 plot_tsne_zero_shot
+
+
+
