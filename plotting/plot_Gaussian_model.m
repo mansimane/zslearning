@@ -9,7 +9,7 @@ hold on;
 p1 = plot(thresholds, gUnseenAccuracies, 'r-+', 'LineWidth', 2);
 p2 = plot(thresholds, gSeenAccuracies, 'b-+', 'LineWidth', 2);
 h_title = title('Gaussian model');
-h_xl = xlabel('Fraction of points classified as unseen');
+h_xl = xlabel('Fraction of points classified as seen');
 h_yl = ylabel('Accuracy');
 set(h_title, 'FontSize', 12);
 set(h_xl, 'FontSize', 12);
