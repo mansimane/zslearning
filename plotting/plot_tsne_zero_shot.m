@@ -33,7 +33,7 @@ num_seen_cats = 8;
 % [C,t,l]= pca([mappedTestImages{1} mappedTestImages{2} mappedTestImages{3} ...
 %     mappedTestImages{4} mappedTestImages{5} mappedTestImages{6} ...
 %     mappedTestImages{7} mappedTestImages{8} wordTable]','NumComponents',2);
- %t = tsne([mappedTestImages{1} mappedTestImages{2} mappedTestImages{3} mappedTestImages{4} mappedTestImages{5} mappedTestImages{6}  mappedTestImages{7} mappedTestImages{8} wordTable]');
+%t = tsne([mappedTestImages{1} mappedTestImages{2} mappedTestImages{3} mappedTestImages{4} mappedTestImages{5} mappedTestImages{6}  mappedTestImages{7} mappedTestImages{8} wordTable]');
     
 mappedWordTable_t = t(numImages*num_seen_cats+1:end, :);
 sym_array = '+o*.xsd^v><';

@@ -8,7 +8,7 @@ addpath costFunctions/;
 %% Model Parameters
 fields = {{'wordDataset',         'acl'};            % type of embedding dataset to use ('turian.200', 'acl')
           {'lambda',              1E-4};   % regularization parameter
-          {'lambda_penalty',      0.01};   % regularization parameter
+          {'lambda_penalty',      0.0001};   % regularization parameter
           {'numReplicate',        0};     % one-shot replication
           {'dropoutFraction',     1};    % drop-out fraction
           {'costFunction',        @mapTrainingCostOneLayer}; % training cost function
@@ -34,7 +34,7 @@ fields = {{'wordDataset',         'acl'};            % type of embedding dataset
           {'sparsityParam',       0.035};  % desired average activation of the hidden units.
           {'beta',                5};      % weight of sparsity penalty term
 
-          {'epochs',              10};      % Number of epochs to train for
+          {'epochs',              100};      % Number of epochs to train for
           {'batch_size',          128};    % Batchsize for gradient calcultation
           {'lr',                  0.001};    % Batchsize for gradient calcultation
           {'GPU',                 false};    % Batchsize for gradient calcultation
@@ -83,7 +83,6 @@ data_val.wordTable = wordTable;
 data_val.cat_id = cat_id;
 
 for i = 1: trainParams.epochs
-    epochStart = tic;
 
     indices = randperm(no_of_samples);
     for j = 1:batch_size:no_of_samples-batch_size
@@ -103,8 +102,6 @@ for i = 1: trainParams.epochs
     fprintf('Epoch = %d, train loss = %d,Val loss = %d\n', i, cost, cost_val);
     cost_array(i) = cost;
     cost_val_array(i) = cost_val;
-    time = toc(epochStart);
-    fprintf(' time for epoch: %f s\n', time);
 
 end
 %theta = trainParams.trainFunction(trainParams, dataToUse, theta);
